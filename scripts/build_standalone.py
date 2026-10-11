@@ -25,4 +25,6 @@ html = html.replace('</body>', '\n'.join(inline) + '\n</body>')
 dest = root / 'dist' / 'kathin-poster.html'
 dest.parent.mkdir(exist_ok=True)
 dest.write_text(html, encoding='utf-8')
+# Static hosts use index.html at the root URL; retain the portable download too.
+(dest.parent / 'index.html').write_text(html, encoding='utf-8')
 print(f'Built portable HTML: {dest.name} ({dest.stat().st_size:,} bytes)')

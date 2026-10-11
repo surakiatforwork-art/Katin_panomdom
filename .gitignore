@@ -4,3 +4,4 @@ source-paragraphs.json
 assets/font-source.css
 *.log
 __pycache__/
+dist/index.html
