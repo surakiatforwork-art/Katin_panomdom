@@ -1,4 +1,4 @@
 window.KATHIN_CONFIG = {
-  "apiUrl": "",
+  "apiUrl": "https://script.google.com/macros/s/AKfycbwga27ayV5LbsCAQ82SMdjLtX03gTz7bYwail9tJLNxAwyPmP-G9sauZpVxY1tUc6DU/exec",
   "sheetUrl": "https://docs.google.com/spreadsheets/d/1c2gkItD39KFWOA0w7NifEEjSjJJMiay3kruieDBkB5o/edit"
 };

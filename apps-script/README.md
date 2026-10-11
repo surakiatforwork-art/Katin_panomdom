@@ -1,8 +1,7 @@
 # ฐานรายชื่อ Google Sheets → Apps Script → เว็บ
 
-**สถานะ:** ชีทและโค้ดพร้อมแล้ว แต่ Google ยังรอเจ้าของบัญชีอนุญาตสคริปต์
-`data-config.json` ยังไม่มี URL API เว็บจึงแสดง snapshot 127 รายการ
-หลังอนุญาตและเผยแพร่ ให้นำ URL `/exec` ลงไฟล์ตั้งค่าแล้ว build/push
+**สถานะ:** เปิด API และเชื่อมเว็บแล้ว โดยตั้ง URL ใน `data-config.json`
+เว็บอ่านชีทตอนเปิดหน้าและกดรีเฟรช ส่วนไฟล์ออฟไลน์ใช้ snapshot ที่บันทึกไว้
 
 ชีทหลัก: https://docs.google.com/spreadsheets/d/1c2gkItD39KFWOA0w7NifEEjSjJJMiay3kruieDBkB5o/edit
 
@@ -52,3 +51,5 @@ Google อาจใช้เวลาสั้น ๆ ให้ CSV สะท้
 `npm run build` ดึง snapshot จาก API ไปที่ `name.json` และ `names.js` สำหรับเปิดออฟไลน์
 ถ้าเชื่อมต่อไม่ได้ยัง build ด้วย snapshot เดิม ไม่มีการดึง Word มาทับฐานชีท
 `scripts/extract_names.py` เก็บไว้สำหรับการนำเข้าจาก Word ด้วยมือเท่านั้น
+
+ตรวจการดึงข้อมูลจริงด้วย `node scripts/verify_live_api.cjs` หรือเติม URL เว็บเป็นอาร์กิวเมนต์
