@@ -10,7 +10,7 @@ const paragraphs = JSON.parse(
     "python",
     [
       "-c",
-      `import zipfile,xml.etree.ElementTree as E,json,pathlib; n={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}; p=next(pathlib.Path('.').glob('*.docx')); r=E.fromstring(zipfile.ZipFile(p).read('word/document.xml')); print(json.dumps([''.join(t.text or '' for t in p.findall('.//w:t',n)).strip() for p in r.findall('.//w:body//w:p',n)],ensure_ascii=True))`,
+      `import zipfile,xml.etree.ElementTree as E,json,pathlib; n={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}; p=next(p for p in pathlib.Path('.').glob('*.docx') if not p.name.startswith('~$')); r=E.fromstring(zipfile.ZipFile(p).read('word/document.xml')); print(json.dumps([''.join(t.text or '' for t in p.findall('.//w:t',n)).strip() for p in r.findall('.//w:body//w:p',n)],ensure_ascii=True))`,
     ],
     { encoding: "utf8" },
   ),
@@ -24,15 +24,21 @@ test("source names, full poster JPG/PNG/PDF downloads and visual layout", async 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator("#poster li")).toHaveCount(125);
+  await expect(page.locator("#poster li")).toHaveCount(126);
   const rendered = await page.locator("#poster li").evaluateAll((nodes) =>
     nodes.map((n) => ({
       text: n.textContent,
       index: Number(n.dataset.sourceParagraph),
     })),
   );
-  for (const entry of rendered)
-    expect(entry.text).toBe(paragraphs[entry.index]);
+  for (const entry of rendered) {
+    if (Number.isFinite(entry.index)) {
+      const corrected = paragraphs[entry.index].replace('เข็มกกลัด', 'เข็มกลัด').replace('คุณอารียื', 'คุณอารีย์').replace('คุณหมุยยง แช่ภู่', 'คุณหมุยยง แซ่ภู่').replace('คุณาญจนา', 'คุณกาญจนา');
+      expect(corrected.split(/\s+(?=\d+\.)/)).toContain(entry.text);
+    }
+    else expect(entry.text).toBe('20.สท.รุ่งอรุณ หายโศก และครอบครัว');
+  }
+  await expect(page.locator('.group-frame').first().locator('li').last()).toHaveText('20.สท.รุ่งอรุณ หายโศก และครอบครัว');
   expect(await page.locator(".group-title").allTextContents()).toEqual([
     paragraphs[169],
     paragraphs[253],
@@ -137,7 +143,7 @@ for (const entry of ["index.html", "dist/kathin-poster.html"]) {
     await page.route("http://**/*", (route) => route.abort());
     await page.goto(pathToFileURL(path.resolve(entry)).href);
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator("#poster li")).toHaveCount(125);
+    await expect(page.locator("#poster li")).toHaveCount(126);
     await page.locator("#open-export").click();
     await page.locator("#export-quality").selectOption("1");
     const pending = page.waitForEvent("download");

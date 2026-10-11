@@ -339,6 +339,10 @@ window.KATHIN_DATA = {
             {
               "text": "19.คุณพิตะวัน เข็มลัด และครอบครัว",
               "sourceParagraph": 252
+            },
+            {
+              "text": "20.สท.รุ่งอรุณ หายโศก และครอบครัว",
+              "sourceNote": "Added by user request"
             }
           ]
         }
