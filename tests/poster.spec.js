@@ -10,7 +10,7 @@ const paragraphs = JSON.parse(
     "python",
     [
       "-c",
-      `import zipfile,xml.etree.ElementTree as E,json,pathlib; n={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}; p=next(p for p in pathlib.Path('.').glob('*.docx') if not p.name.startswith('~$')); r=E.fromstring(zipfile.ZipFile(p).read('word/document.xml')); print(json.dumps([''.join(t.text or '' for t in p.findall('.//w:t',n)).strip() for p in r.findall('.//w:body//w:p',n)],ensure_ascii=True))`,
+      `import zipfile,xml.etree.ElementTree as E,json,pathlib; n={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}; p=pathlib.Path(json.loads(pathlib.Path('name.json').read_text(encoding='utf8'))['source']); r=E.fromstring(zipfile.ZipFile(p).read('word/document.xml')); print(json.dumps([''.join(t.text or '' for t in p.findall('.//w:t',n)).strip() for p in r.findall('.//w:body//w:p',n)],ensure_ascii=True))`,
     ],
     { encoding: "utf8" },
   ),
@@ -32,18 +32,12 @@ test("source names, full poster JPG/PNG/PDF downloads and visual layout", async 
     })),
   );
   for (const entry of rendered) {
-    if (Number.isFinite(entry.index)) {
-      const corrected = paragraphs[entry.index].replace('เข็มกกลัด', 'เข็มกลัด').replace('คุณอารียื', 'คุณอารีย์').replace('คุณหมุยยง แช่ภู่', 'คุณหมุยยง แซ่ภู่').replace('คุณาญจนา', 'คุณกาญจนา');
-      expect(corrected.split(/\s+(?=\d+\.)/)).toContain(entry.text);
-    }
-    else expect(entry.text).toBe('20.สท.รุ่งอรุณ หายโศก และครอบครัว');
+    expect(entry.text).toBe(paragraphs[entry.index].replace(/^(\d+\.)\s*/, '$1'));
   }
   await expect(page.locator('.group-frame').first().locator('li').last()).toHaveText('20.สท.รุ่งอรุณ หายโศก และครอบครัว');
-  expect(await page.locator(".group-title").allTextContents()).toEqual([
-    paragraphs[169],
-    paragraphs[253],
-    paragraphs[266],
-  ]);
+  expect(await page.locator(".group-title").allTextContents()).toEqual(paragraphs.filter(p => p.startsWith('สาย')));
+  const jsonData = JSON.parse(fs.readFileSync('name.json', 'utf8'));
+  expect(await page.evaluate(() => window.KATHIN_DATA)).toEqual(jsonData);
   const clipped = await page
     .locator("#poster li,.group-title,.title-plaque h2,.role-section")
     .evaluateAll((nodes) =>
