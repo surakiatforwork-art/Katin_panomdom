@@ -48,4 +48,4 @@ npm test
 
 ## ทรัพยากร
 
-ภาพตกแต่งมาจากภาพอ้างอิงของผู้ใช้ ฟอนต์ Noto Sans Thai ใช้ SIL Open Font License (`assets/OFL.txt`) ส่วน html2canvas 1.4.1 และ jsPDF 2.5.2 ใช้ MIT License เก็บใบอนุญาตไว้ใน `vendor` มีการเก็บไลบรารีในเครื่องเพื่อให้ดาวน์โหลดได้โดยไม่พึ่ง CDN
+ภาพตกแต่งมาจากภาพอ้างอิงของผู้ใช้ ส่วนท้ายดอกบัว `assets/footer-lotus.png` สร้างด้วย ImageGen โดยอ้างอิงภาพเดิมและแยกออกจากข้อความ เพื่อให้ดอกบัวและลายทองครบรูปโดยไม่มีแถบสีปิดทับ ฟอนต์ Noto Sans Thai ใช้ SIL Open Font License (`assets/OFL.txt`) ส่วน html2canvas 1.4.1 และ jsPDF 2.5.2 ใช้ MIT License เก็บใบอนุญาตไว้ใน `vendor` มีการเก็บไลบรารีในเครื่องเพื่อให้ดาวน์โหลดได้โดยไม่พึ่ง CDN

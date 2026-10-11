@@ -471,7 +471,7 @@ select:focus-visible {
 }
 .poster-footer {
   position: relative;
-  height: 115px;
+  height: 290px;
   background-image: url("assets/reference-temple.png");
   background-size: 1200px auto;
   background-position: center bottom;
@@ -807,19 +807,14 @@ select {
   background: #fffbea;
 }
 .poster-footer:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 36px;
-  background: #fff9e6;
+  content: none;
 }
 .poster-footer p {
-  width: 830px;
-  height: 100px;
-  padding: 17px 8px;
-  background: #fff9e6;
+  width: 760px;
+  height: auto;
+  margin-top: 60px;
+  padding: 0;
+  background: transparent;
   border-radius: 0;
   z-index: 1;
 }

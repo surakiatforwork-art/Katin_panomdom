@@ -8,9 +8,8 @@
   const dialog = $("export-dialog");
   const status = $("export-status");
   const saveButton = $("save-export");
-  document.querySelectorAll(".poster-header,.poster-footer").forEach((node) => {
-    node.style.backgroundImage = `url("${window.KATHIN_ART}")`;
-  });
+  document.querySelector(".poster-header").style.backgroundImage = `url("${window.KATHIN_ART}")`;
+  document.querySelector(".poster-footer").style.backgroundImage = `url("${window.KATHIN_FOOTER_ART}")`;
   let busy = false;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   let motion = !reduced.matches;
@@ -206,9 +205,11 @@
         );
       await document.fonts.ready;
       // Decode the decorative background before cloning (including offline file use).
-      const art = new Image();
-      art.src = window.KATHIN_ART;
-      await art.decode();
+      await Promise.all([window.KATHIN_ART, window.KATHIN_FOOTER_ART].map(async (source) => {
+        const art = new Image();
+        art.src = source;
+        await art.decode();
+      }));
       const height = poster.offsetHeight;
       status.textContent = "กำลังสร้างไฟล์ความละเอียดสูง กรุณารอสักครู่…";
       const canvas = await window.html2canvas(poster, {
