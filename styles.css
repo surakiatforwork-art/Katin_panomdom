@@ -1092,3 +1092,6 @@ select {
 .a4-export .poster-footer span {
   font-size: 18px;
 }
+/* Data controls stay outside the printable/exported poster. */
+.data-controls { display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; padding:0 16px 16px; font-size:13px; color:#d4bd90; }
+.data-controls button { font-size:13px; }

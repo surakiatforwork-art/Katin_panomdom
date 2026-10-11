@@ -9,11 +9,13 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="mobile.css">
   <script defer src="names.js"></script>
+  <script defer src="data-config.js"></script>
   <script defer src="assets/poster-art.js"></script>
   <script defer src="vendor/html2canvas.min.js"></script>
   <script defer src="vendor/jspdf.umd.min.js"></script>
   <script defer src="effects.js"></script>
   <script defer src="app.js"></script>
+  <script defer src="live-data.js"></script>
 </head>
 <body>
   <div class="ambient" aria-hidden="true"></div>
@@ -26,6 +28,7 @@
   </header>
   <main>
     <div class="intro"><span class="eyebrow">ร่วมสืบสานประเพณี · ร่วมอนุโมทนาบุญ</span><h1>กฐินสามัคคี</h1><p>รายนามผู้ร่วมทำบุญ ณ วัดเขาพนมโดมวนาราม</p><div class="intro-rule" aria-hidden="true"><span>✧</span></div></div>
+    <div class="data-controls"><span id="data-status" role="status">รายชื่อสำรอง</span><button id="refresh-names" type="button" class="quiet-button">รีเฟรชรายชื่อ</button></div>
     <div class="stage" id="stage">
       <div class="poster-sizer" id="poster-sizer">
         <article id="poster" class="poster" aria-label="โปสเตอร์รายชื่อผู้ร่วมทำบุญกฐินสามัคคี">

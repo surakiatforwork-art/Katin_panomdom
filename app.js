@@ -1,7 +1,6 @@
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
-  const data = window.KATHIN_DATA;
   const poster = $("poster");
   const stage = $("stage");
   const sizer = $("poster-sizer");
@@ -18,9 +17,10 @@
 
   function list(entries) {
     const ol = document.createElement("ol");
-    entries.forEach(({ text, sourceParagraph }) => {
+    entries.forEach(({ text, sourceParagraph, sheetRow }) => {
       const li = document.createElement("li");
-      li.dataset.sourceParagraph = sourceParagraph;
+      if (sourceParagraph !== undefined) li.dataset.sourceParagraph = sourceParagraph;
+      if (sheetRow !== undefined) li.dataset.sheetRow = sheetRow;
       const match = text.match(/^(\d+\.)(.*)$/);
       const number = document.createElement("span");
       number.className = "entry-number";
@@ -69,6 +69,7 @@
     return node;
   }
 
+  function renderNames(data) {
   const main = frame(data.groups[0]);
   const columns = document.createElement("div");
   columns.className = "main-columns";
@@ -98,7 +99,18 @@
     node.append(sections);
     bottom.append(node);
   });
-  $("groups").append(main, bottom);
+  $("groups").replaceChildren(main, bottom);
+  window.KATHIN_DATA = data;
+  fitPoster();
+  }
+  renderNames(window.KATHIN_DATA);
+  window.addEventListener('kathin-data', (event) => {
+    if (busy) {
+      status.textContent = 'รายชื่อมีการเปลี่ยนแปลง กรุณาปิดหน้าดาวน์โหลดและรีเฟรชรายชื่ออีกครั้ง';
+      return;
+    }
+    renderNames(event.detail);
+  });
 
   function fitPoster() {
     const nativeMobile = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0 || innerWidth <= 700;

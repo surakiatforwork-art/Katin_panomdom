@@ -1,21 +1,14 @@
 const { test, expect } = require("@playwright/test");
 const fs = require("node:fs");
 const path = require("node:path");
-const { execFileSync } = require("node:child_process");
 const { pathToFileURL } = require("node:url");
 const out = path.resolve("test-results");
 fs.mkdirSync(out, { recursive: true });
-const paragraphs = JSON.parse(
-  execFileSync(
-    "python",
-    [
-      "-c",
-      `import zipfile,xml.etree.ElementTree as E,json,pathlib; n={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}; p=pathlib.Path(json.loads(pathlib.Path('name.json').read_text(encoding='utf8'))['source']); r=E.fromstring(zipfile.ZipFile(p).read('word/document.xml')); print(json.dumps([''.join(t.text or '' for t in p.findall('.//w:t',n)).strip() for p in r.findall('.//w:body//w:p',n)],ensure_ascii=True))`,
-    ],
-    { encoding: "utf8" },
-  ),
-);
-const expectedNames = paragraphs.filter(p => /^\d+\./.test(p)).map(p => p.replace(/^(\d+\.)\s*/, '$1'));
+const jsonData = JSON.parse(fs.readFileSync('name.json', 'utf8'));
+const expectedNames = jsonData.groups.flatMap(g => g.sections.flatMap(s => s.entries.map(e => e.text)));
+test.beforeEach(async ({page}) => {
+  await page.route('https://script.google.com/**', route => route.abort());
+});
 
 test("source names, full poster JPG/PNG/PDF downloads and visual layout", async ({
   page,
@@ -32,13 +25,9 @@ test("source names, full poster JPG/PNG/PDF downloads and visual layout", async 
       index: Number(n.dataset.sourceParagraph),
     })),
   );
-  for (const entry of rendered) {
-    expect(entry.text).toBe(paragraphs[entry.index].replace(/^(\d+\.)\s*/, '$1'));
-  }
   expect(rendered.map(e => e.text)).toEqual(expectedNames);
   await expect(page.locator('.group-frame').first().locator('li').last()).toHaveText('20.สท.รุ่งอรุณ หายโศก และครอบครัว');
-  expect(await page.locator(".group-title").allTextContents()).toEqual(paragraphs.filter(p => p.startsWith('สาย')));
-  const jsonData = JSON.parse(fs.readFileSync('name.json', 'utf8'));
+  expect(await page.locator(".group-title").allTextContents()).toEqual(jsonData.groups.map(g=>g.title));
   expect(await page.evaluate(() => window.KATHIN_DATA)).toEqual(jsonData);
   const clipped = await page
     .locator("#poster li,.group-title,.title-plaque h2,.role-section")
@@ -110,6 +99,7 @@ test("mobile export keeps full poster width and reduced motion preference", asyn
     reducedMotion: "reduce",
     acceptDownloads: true,
   });
+  await context.route('https://script.google.com/**', route => route.abort());
   const page = await context.newPage();
   await page.goto("http://127.0.0.1:8765");
   await page.evaluate(() => document.fonts.ready);

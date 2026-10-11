@@ -1,4 +1,4 @@
-/* Generated from organized Word and name.json. */
+/* Saved snapshot; live-data.js reads Google Sheets on opening. */
 window.KATHIN_DATA = {
   "title": "รายชื่อผู้ร่วมทำบุญกฐินสามัคคี ณ วัดเขาพนมโดมวนาราม",
   "source": "output/รายชื่อกฐินสามัคคี_ฉบับจัดระเบียบ.docx",
