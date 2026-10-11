@@ -17,6 +17,8 @@ const fs = require('node:fs');
     expect(expected.length).toBe(data.count);
     expect(errors).toEqual([]);
     await page.locator('#refresh-names').click();
+    await expect(page.locator('#refresh-names')).toBeDisabled();
+    await expect(page.locator('#refresh-names')).toBeEnabled({timeout:30000});
     await expect(page.locator('#data-status')).toContainText('รายชื่อจากชีท',{timeout:30000});
     await page.evaluate(()=>document.fonts.ready);
     fs.mkdirSync('test-results',{recursive:true});
