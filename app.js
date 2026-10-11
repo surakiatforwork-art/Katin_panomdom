@@ -8,8 +8,10 @@
   const dialog = $("export-dialog");
   const status = $("export-status");
   const saveButton = $("save-export");
-  document.querySelector(".poster-header").style.backgroundImage = `url("${window.KATHIN_ART}")`;
-  document.querySelector(".poster-footer").style.backgroundImage = `url("${window.KATHIN_FOOTER_ART}")`;
+  document.querySelector(".poster-header").style.backgroundImage =
+    `url("${window.KATHIN_ART}")`;
+  document.querySelector(".poster-footer").style.backgroundImage =
+    `url("${window.KATHIN_FOOTER_ART}")`;
   let busy = false;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   let motion = !reduced.matches;
@@ -170,6 +172,48 @@
     }),
   );
 
+  async function setA4Density(blob, format, width, height) {
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    if (format === "jpg") {
+      if (String.fromCharCode(...bytes.slice(6, 10)) === "JFIF") {
+        const view = new DataView(bytes.buffer);
+        bytes[13] = 1; // JFIF dots per inch; A4 physical print dimensions.
+        view.setUint16(14, Math.round((width * 25.4) / 210));
+        view.setUint16(16, Math.round((height * 25.4) / 297));
+      }
+      return new Blob([bytes], { type: blob.type });
+    }
+    const chunk = new Uint8Array(21);
+    const view = new DataView(chunk.buffer);
+    view.setUint32(0, 9);
+    chunk.set([112, 72, 89, 115], 4); // PNG pHYs
+    view.setUint32(8, Math.round(width / 0.21));
+    view.setUint32(12, Math.round(height / 0.297));
+    chunk[16] = 1; // pixels per metre
+    let crc = 0xffffffff;
+    for (const byte of chunk.slice(4, 17)) {
+      crc ^= byte;
+      for (let bit = 0; bit < 8; bit++)
+        crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+    }
+    view.setUint32(17, (crc ^ 0xffffffff) >>> 0);
+    let offset = 8;
+    const sourceView = new DataView(bytes.buffer);
+    while (offset < bytes.length) {
+      const length = sourceView.getUint32(offset);
+      if (
+        String.fromCharCode(...bytes.slice(offset + 4, offset + 8)) === "pHYs"
+      ) {
+        bytes.set(chunk, offset);
+        return new Blob([bytes], { type: blob.type });
+      }
+      offset += length + 12;
+    }
+    return new Blob([bytes.slice(0, 33), chunk, bytes.slice(33)], {
+      type: blob.type,
+    });
+  }
+
   async function downloadBlob(blob, filename) {
     if (!blob) throw new Error("สร้างไฟล์ภาพไม่สำเร็จ");
     const url = URL.createObjectURL(blob);
@@ -205,17 +249,18 @@
         );
       await document.fonts.ready;
       // Decode the decorative background before cloning (including offline file use).
-      await Promise.all([window.KATHIN_ART, window.KATHIN_FOOTER_ART].map(async (source) => {
-        const art = new Image();
-        art.src = source;
-        await art.decode();
-      }));
+      await Promise.all(
+        [window.KATHIN_ART, window.KATHIN_FOOTER_ART].map(async (source) => {
+          const art = new Image();
+          art.src = source;
+          await art.decode();
+        }),
+      );
       const height = poster.offsetHeight;
       status.textContent = "กำลังสร้างไฟล์ความละเอียดสูง กรุณารอสักครู่…";
       const canvas = await window.html2canvas(poster, {
         scale,
         width: 1200,
-        height,
         windowWidth: 1400,
         windowHeight: height + 100,
         scrollX: 0,
@@ -226,6 +271,7 @@
         logging: false,
         onclone: (doc) => {
           const clone = doc.getElementById("poster");
+          clone.classList.add("a4-export");
           doc.body.classList.add("still");
           doc.body.append(clone);
           for (const child of doc.body.children)
@@ -252,19 +298,40 @@
           });
         },
       });
+      // Fit the complete compact poster onto one A4 sheet without stretching
+      // or cropping. The live page keeps its original width and natural height.
+      const sheet = document.createElement("canvas");
+      sheet.width = 1200 * scale;
+      sheet.height = Math.round((sheet.width * 297) / 210);
+      const context = sheet.getContext("2d");
+      context.fillStyle = "#fff9e8";
+      context.fillRect(0, 0, sheet.width, sheet.height);
+      const fit = Math.min(
+        sheet.width / canvas.width,
+        sheet.height / canvas.height,
+      );
+      const drawWidth = canvas.width * fit;
+      const drawHeight = canvas.height * fit;
+      context.drawImage(
+        canvas,
+        (sheet.width - drawWidth) / 2,
+        (sheet.height - drawHeight) / 2,
+        drawWidth,
+        drawHeight,
+      );
       const filename = "kathin-wat-khao-phanom-dom";
       if (format === "pdf") {
         const { jsPDF } = window.jspdf;
-        const widthMm = 297;
-        const heightMm = (widthMm * canvas.height) / canvas.width;
+        const widthMm = 210;
+        const heightMm = 297;
         const pdf = new jsPDF({
-          orientation: heightMm > widthMm ? "portrait" : "landscape",
+          orientation: "portrait",
           unit: "mm",
           format: [widthMm, heightMm],
           compress: true,
         });
         pdf.addImage(
-          canvas.toDataURL("image/jpeg", 0.97),
+          sheet.toDataURL("image/jpeg", 0.97),
           "JPEG",
           0,
           0,
@@ -279,12 +346,18 @@
       } else {
         const mime = format === "jpg" ? "image/jpeg" : "image/png";
         const blob = await new Promise((resolve) =>
-          canvas.toBlob(resolve, mime, 0.96),
+          sheet.toBlob(resolve, mime, 0.96),
         );
-        await downloadBlob(blob, `${filename}.${format}`);
+        if (!blob) throw new Error("สร้างไฟล์ภาพไม่สำเร็จ");
+        await downloadBlob(
+          await setA4Density(blob, format, sheet.width, sheet.height),
+          `${filename}.${format}`,
+        );
       }
       canvas.width = 0;
       canvas.height = 0;
+      sheet.width = 0;
+      sheet.height = 0;
       status.textContent = `สร้างไฟล์ ${format.toUpperCase()} สำเร็จ ตรวจสอบไฟล์ในรายการดาวน์โหลดของเบราว์เซอร์`;
     } catch (error) {
       console.error("Poster export failed:", error);

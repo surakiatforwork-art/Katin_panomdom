@@ -25,14 +25,12 @@ test("source names, full poster JPG/PNG/PDF downloads and visual layout", async 
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator("#poster li")).toHaveCount(125);
-  const rendered = await page
-    .locator("#poster li")
-    .evaluateAll((nodes) =>
-      nodes.map((n) => ({
-        text: n.textContent,
-        index: Number(n.dataset.sourceParagraph),
-      })),
-    );
+  const rendered = await page.locator("#poster li").evaluateAll((nodes) =>
+    nodes.map((n) => ({
+      text: n.textContent,
+      index: Number(n.dataset.sourceParagraph),
+    })),
+  );
   for (const entry of rendered)
     expect(entry.text).toBe(paragraphs[entry.index]);
   expect(await page.locator(".group-title").allTextContents()).toEqual([
@@ -67,6 +65,11 @@ test("source names, full poster JPG/PNG/PDF downloads and visual layout", async 
     expect(bytes.length).toBeGreaterThan(100000);
     if (format === "pdf") {
       expect(bytes.subarray(0, 4).toString()).toBe("%PDF");
+      const mediaBox = bytes
+        .toString("latin1")
+        .match(/\/MediaBox\s*\[0 0 ([\d.]+) ([\d.]+)\]/);
+      expect(Number(mediaBox[1])).toBeCloseTo((210 * 72) / 25.4, 2);
+      expect(Number(mediaBox[2])).toBeCloseTo((297 * 72) / 25.4, 2);
       expect(
         (bytes.toString("latin1").match(/\/Type \/Page\b/g) || []).length,
       ).toBe(1);
@@ -89,9 +92,7 @@ test("source names, full poster JPG/PNG/PDF downloads and visual layout", async 
         },
       );
       expect(dimensions[0]).toBe(2400);
-      expect(dimensions[1]).toBe(
-        await page.locator("#poster").evaluate((n) => n.offsetHeight * 2),
-      );
+      expect(dimensions[1]).toBe(Math.round((2400 * 297) / 210));
     }
   }
   expect(errors).toEqual([]);
@@ -124,9 +125,7 @@ test("mobile export keeps full poster width and reduced motion preference", asyn
   await expect(page.locator("#export-status")).toContainText("สำเร็จ");
   const png = fs.readFileSync(path.join(out, "mobile-export.png"));
   expect(png.readUInt32BE(16)).toBe(2400);
-  expect(png.readUInt32BE(20)).toBe(
-    await page.locator("#poster").evaluate((n) => n.offsetHeight * 2),
-  );
+  expect(png.readUInt32BE(20)).toBe(Math.round((2400 * 297) / 210));
   await context.close();
 });
 

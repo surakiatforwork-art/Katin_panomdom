@@ -836,3 +836,58 @@ select {
     transform: perspective(160px) rotateY(38deg) rotateZ(8deg) translateY(-4px);
   }
 }
+
+/* Compact print composition is applied only to the export clone. */
+.a4-export .role-section ol {
+  font-size: 14px;
+  line-height: 1.35;
+}
+.a4-export .role-section li {
+  padding: 0;
+}
+.a4-export .role-section {
+  padding: 0 8px 7px;
+}
+.a4-export .role-section h4 {
+  font-size: 17px;
+  margin-bottom: 4px;
+  padding: 0 14px;
+}
+.a4-export .group-title {
+  font-size: 22px;
+  padding: 6px 12px;
+  margin-bottom: 6px;
+}
+.a4-export .section-column,
+.a4-export .bottom-groups .sections {
+  gap: 6px;
+}
+.a4-export .main-columns {
+  gap: 9px;
+}
+.a4-export .bottom-groups {
+  margin-top: 12px;
+  gap: 12px;
+}
+.a4-export .bottom-groups .group-title {
+  font-size: 20px;
+  min-height: 65px;
+}
+.a4-export .bottom-groups .group-frame:nth-child(2) .group-title {
+  min-height: 0;
+}
+.a4-export .bottom-groups .role-section ol {
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+.a4-export .poster-footer {
+  height: 240px;
+  background-size: 1200px 350px;
+  margin-top: 0;
+}
+.a4-export .poster-footer p {
+  font-size: 20px;
+}
+.a4-export .poster-footer span {
+  font-size: 18px;
+}

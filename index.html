@@ -44,15 +44,15 @@
   <dialog id="export-dialog" aria-labelledby="export-title">
     <form method="dialog"><button class="close-button" aria-label="ปิดหน้าต่าง" value="cancel">×</button></form>
     <div class="dialog-symbol" aria-hidden="true">❖</div>
-    <h2 id="export-title">ดาวน์โหลดโปสเตอร์</h2><p class="dialog-description">บันทึกโปสเตอร์เต็มหน้า พร้อมรายชื่อครบทุกสาย</p>
+    <h2 id="export-title">ดาวน์โหลดโปสเตอร์</h2><p class="dialog-description">โปสเตอร์ A4 แนวตั้ง 210 × 297 มม. พร้อมรายชื่อครบทุกสาย</p>
     <fieldset class="format-options"><legend>เลือกรูปแบบไฟล์</legend>
       <label><input type="radio" name="format" value="jpg" checked><span><strong>JPG</strong><small>แชร์ง่าย · ไฟล์ขนาดเล็ก</small></span></label>
       <label><input type="radio" name="format" value="png"><span><strong>PNG</strong><small>ภาพคมชัด · เก็บรายละเอียด</small></span></label>
       <label><input type="radio" name="format" value="pdf"><span><strong>PDF</strong><small>โปสเตอร์หน้าเดียว · พร้อมพิมพ์</small></span></label>
     </fieldset>
     <label class="quality-label" for="export-quality">ความละเอียด</label>
-    <select id="export-quality"><option value="2">สูง — กว้าง 2,400 พิกเซล</option><option value="3">สูงพิเศษ — กว้าง 3,600 พิกเซล</option><option value="1">มาตรฐาน — กว้าง 1,200 พิกเซล</option></select>
-    <p class="export-note">ไฟล์ที่ได้จะเป็นภาพนิ่งเต็มโปสเตอร์ ไม่มีปุ่มควบคุม</p>
+    <select id="export-quality"><option value="2">สูง — A4 2,400 × 3,394 พิกเซล</option><option value="3">สูงพิเศษ — A4 3,600 × 5,091 พิกเซล</option><option value="1">มาตรฐาน — A4 1,200 × 1,697 พิกเซล</option></select>
+    <p class="export-note">จัดรายชื่อทั้งหมดลงบน A4 หนึ่งหน้า ไม่มีปุ่มควบคุม</p>
     <button id="save-export" class="gold-button save-button" type="button">ดาวน์โหลด JPG</button>
     <p id="export-status" class="export-status" role="status" aria-live="polite"></p>
   </dialog>
