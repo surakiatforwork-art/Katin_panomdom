@@ -846,6 +846,22 @@ select {
   z-index: 40;
   pointer-events: none;
 }
+.touch-sparkles {
+  pointer-events: none;
+}
+.touch-spark {
+  position: fixed;
+  z-index: 40;
+  pointer-events: none;
+  color: #ffe5a2;
+  font-style: normal;
+  line-height: 1;
+  text-shadow: 0 0 4px #f0bc50;
+  will-change: transform, opacity;
+}
+.still .touch-sparkles {
+  display: none !important;
+}
 .floating-petals {
   position: fixed;
   inset: 0;

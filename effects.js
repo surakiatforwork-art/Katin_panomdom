@@ -5,6 +5,56 @@
   let paused = false;
   let targetX = 0;
   const active = () => enabled && !paused && !document.hidden;
+  // Avoid a full-screen canvas compositor layer on touch devices / iOS.
+  const touchMode =
+    matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+  const touchLayer = document.createElement("div");
+  touchLayer.className = "touch-sparkles live-decoration";
+  touchLayer.setAttribute("aria-hidden", "true");
+  touchLayer.setAttribute("data-html2canvas-ignore", "true");
+  if (touchMode) document.body.append(touchLayer);
+  const touchStars = new Set();
+  function emitTouch(x, y, count) {
+    for (let i = 0; i < Math.min(count, 12); i++) {
+      const star = document.createElement("i");
+      star.className = "touch-spark";
+      star.textContent = "✦";
+      star.style.left = `${x}px`;
+      star.style.top = `${y}px`;
+      star.style.fontSize = `${9 + Math.random() * 9}px`;
+      touchLayer.append(star);
+      touchStars.add(star);
+      const drift = (Math.random() - 0.5) * 85;
+      const rise = 65 + Math.random() * 100;
+      const animation = star.animate(
+        [
+          { transform: "translate(0,0) scale(.35)", opacity: 0 },
+          {
+            offset: 0.16,
+            transform: `translate(${drift * 0.15}px,${-rise * 0.15}px) scale(1)`,
+            opacity: 1,
+          },
+          { offset: 0.5, opacity: 0.55 },
+          {
+            transform: `translate(${drift}px,${-rise}px) scale(.25)`,
+            opacity: 0,
+          },
+        ],
+        { duration: 700 + Math.random() * 450, easing: "ease-out" },
+      );
+      const remove = () => {
+        touchStars.delete(star);
+        star.remove();
+      };
+      animation.onfinish = remove;
+      while (touchStars.size > 48) {
+        const oldest = touchStars.values().next().value;
+        oldest.getAnimations().forEach((a) => a.cancel());
+        touchStars.delete(oldest);
+        oldest.remove();
+      }
+    }
+  }
   const layer = document.createElement("div");
   layer.className = "floating-petals live-decoration";
   layer.setAttribute("aria-hidden", "true");
@@ -26,13 +76,14 @@
   canvas.className = "pointer-sparkles live-decoration";
   canvas.setAttribute("aria-hidden", "true");
   canvas.setAttribute("data-html2canvas-ignore", "true");
-  document.body.append(canvas);
+  if (!touchMode) document.body.append(canvas);
   const ctx = canvas.getContext("2d");
   let particles = [],
     particleFrame = 0,
     lastTime = 0,
     lastEmit = 0;
   function resize() {
+    if (touchMode) return;
     const dpr = Math.min(devicePixelRatio, 1.25);
     canvas.width = Math.round(innerWidth * dpr);
     canvas.height = Math.round(innerHeight * dpr);
@@ -42,6 +93,10 @@
   window.addEventListener("resize", resize, { passive: true });
   function emit(x, y, count) {
     if (!active() || document.getElementById("export-dialog").open) return;
+    if (touchMode) {
+      emitTouch(x, y, count);
+      return;
+    }
     for (let i = 0; i < count; i++)
       particles.push({
         x,
@@ -125,8 +180,14 @@
   function sync() {
     layer.style.display = enabled ? "" : "none";
     canvas.style.display = enabled ? "" : "none";
+    touchLayer.style.display = enabled ? "" : "none";
     document.body.classList.toggle("effects-paused", paused || document.hidden);
     if (!active()) {
+      for (const star of touchStars) {
+        star.getAnimations().forEach((a) => a.cancel());
+        star.remove();
+      }
+      touchStars.clear();
       cancelAnimationFrame(particleFrame);
       particleFrame = 0;
       particles = [];
