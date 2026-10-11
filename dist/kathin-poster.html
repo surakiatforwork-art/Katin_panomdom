@@ -1102,6 +1102,313 @@ select {
   font-size: 18px;
 }
 
+/* Generated native mobile poster layout; no scale transform. */
+body.touch-layout .poster {
+  width: calc(1200px * var(--poster-scale));
+  transform-origin: top left;
+  position: relative;
+  background: linear-gradient(110deg, #fff8e2, #fffcf1 50%, #fff4d9);
+  color: var(--ink);
+  border: calc(2px * var(--poster-scale)) solid #bd8528;
+  border-radius: calc(7px * var(--poster-scale));
+  overflow: hidden;
+  isolation: isolate;
+}
+body.touch-layout .poster:before {
+  content: "";
+  position: absolute;
+  inset: calc(7px * var(--poster-scale));
+  border: calc(1px * var(--poster-scale)) solid #e6b650;
+  border-radius: calc(3px * var(--poster-scale));
+  pointer-events: none;
+  z-index: 3;
+}
+body.touch-layout .poster-header {
+  position: relative;
+  height: calc(282px * var(--poster-scale));
+  overflow: hidden;
+  background-image: none;
+  background-size: calc(1200px * var(--poster-scale)) auto;
+  background-position: center top;
+  background-repeat: no-repeat;
+  text-align: center;
+  padding-top: calc(25px * var(--poster-scale));
+}
+body.touch-layout .title-plaque {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(17px * var(--poster-scale));
+  width: calc(804px * var(--poster-scale));
+  height: calc(96px * var(--poster-scale));
+  margin: 0 auto;
+  background: linear-gradient(180deg, #981b28, #700b18 50%, #8d1926);
+  border: calc(4px * var(--poster-scale)) solid #edb74a;
+  outline: calc(2px * var(--poster-scale)) solid #b87718;
+  border-radius: calc(30px * var(--poster-scale)) calc(30px * var(--poster-scale)) calc(36px * var(--poster-scale)) calc(36px * var(--poster-scale));
+  box-shadow:
+    inset 0 0 0 calc(3px * var(--poster-scale)) #ffdb77,
+    0 calc(5px * var(--poster-scale)) calc(8px * var(--poster-scale)) #74370566;
+  color: #fff7e6;
+}
+body.touch-layout .title-plaque h2 {
+  font-size: calc(39px * var(--poster-scale));
+  line-height: 1.5;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 calc(2px * var(--poster-scale)) calc(2px * var(--poster-scale)) #330810;
+}
+body.touch-layout .plaque-ornament {
+  font-size: calc(30px * var(--poster-scale));
+  color: #f6c34d;
+}
+body.touch-layout .temple-plaque {
+  position: relative;
+  z-index: 1;
+  width: calc(628px * var(--poster-scale));
+  margin: calc(-1px * var(--poster-scale)) auto 0;
+  border: calc(3px * var(--poster-scale)) solid #d99624;
+  outline: calc(2px * var(--poster-scale)) solid #ffd773;
+  border-radius: calc(26px * var(--poster-scale));
+  background: linear-gradient(#fffde6, #ffecaf);
+  box-shadow:
+    inset 0 0 0 calc(2px * var(--poster-scale)) #fff9d6,
+    0 calc(4px * var(--poster-scale)) calc(8px * var(--poster-scale)) #8d590444;
+  height: calc(69px * var(--poster-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(38px * var(--poster-scale));
+  color: #482114;
+  font-weight: 600;
+}
+body.touch-layout .temple-location {
+  position: relative;
+  display: inline-block;
+  margin: calc(13px * var(--poster-scale)) 0 0;
+  background: #fffbea;
+  padding: 0 calc(16px * var(--poster-scale));
+  border-radius: calc(12px * var(--poster-scale));
+  font-size: calc(23px * var(--poster-scale));
+  line-height: 1.5;
+  font-weight: 600;
+}
+body.touch-layout .header-ornament {
+  position: absolute;
+  bottom: calc(6px * var(--poster-scale));
+  left: 25%;
+  width: 50%;
+  font-size: calc(23px * var(--poster-scale));
+  color: #c1851b;
+  background: radial-gradient(ellipse, #fff9e6 40%, transparent 70%);
+  text-shadow: 0 calc(1px * var(--poster-scale)) #fff;
+}
+body.touch-layout .poster-content {
+  padding: calc(7px * var(--poster-scale)) calc(18px * var(--poster-scale)) 0;
+  position: relative;
+}
+body.touch-layout .group-frame {
+  position: relative;
+  border: calc(3px * var(--poster-scale)) double #b8862f;
+  padding: calc(7px * var(--poster-scale));
+  background: #fffdf280;
+  border-radius: calc(17px * var(--poster-scale)) calc(3px * var(--poster-scale)) calc(17px * var(--poster-scale)) calc(3px * var(--poster-scale));
+  box-shadow:
+    inset 0 0 0 calc(3px * var(--poster-scale)) #fff9e3,
+    0 calc(2px * var(--poster-scale)) calc(5px * var(--poster-scale)) #bd9a4b15;
+}
+body.touch-layout .group-frame:before, body.touch-layout .group-frame:after {
+  content: "❖";
+  position: absolute;
+  z-index: 1;
+  font-size: calc(19px * var(--poster-scale));
+  color: #bc8625;
+  line-height: 1;
+  background: #fff8e3;
+}
+body.touch-layout .group-frame:before {
+  left: calc(-11px * var(--poster-scale));
+  top: calc(-10px * var(--poster-scale));
+}
+body.touch-layout .group-frame:after {
+  right: calc(-11px * var(--poster-scale));
+  bottom: calc(-9px * var(--poster-scale));
+}
+body.touch-layout .group-title {
+  margin: 0 0 calc(9px * var(--poster-scale));
+  padding: calc(9px * var(--poster-scale)) calc(16px * var(--poster-scale)) calc(10px * var(--poster-scale));
+  color: white;
+  font-weight: 600;
+  font-size: calc(26px * var(--poster-scale));
+  line-height: 1.35;
+  background: linear-gradient(100deg, #5b207c, #8248a4 65%, #d4b5e7);
+  border-top: calc(1px * var(--poster-scale)) solid #dfbbef;
+  border-bottom: calc(2px * var(--poster-scale)) solid #622982;
+  border-radius: calc(10px * var(--poster-scale)) calc(2px * var(--poster-scale)) calc(10px * var(--poster-scale)) calc(2px * var(--poster-scale));
+  text-shadow: 0 calc(1px * var(--poster-scale)) calc(2px * var(--poster-scale)) #3b164d80;
+}
+body.touch-layout .main-columns {
+  display: grid;
+  grid-template-columns: 1fr 1.03fr 1fr;
+  gap: calc(12px * var(--poster-scale));
+}
+body.touch-layout .section-column {
+  display: flex;
+  flex-direction: column;
+  gap: calc(9px * var(--poster-scale));
+}
+body.touch-layout .role-section {
+  padding: 0 calc(11px * var(--poster-scale)) calc(10px * var(--poster-scale));
+  border: calc(1px * var(--poster-scale)) solid #daa847;
+  border-radius: calc(13px * var(--poster-scale));
+  background: linear-gradient(125deg, #fffdfa, #fff9ed);
+  min-width: 0;
+}
+body.touch-layout .role-section h4 {
+  display: table;
+  position: relative;
+  margin: 0 0 calc(8px * var(--poster-scale)) calc(-3px * var(--poster-scale));
+  padding: calc(1px * var(--poster-scale)) calc(18px * var(--poster-scale));
+  background: linear-gradient(180deg, #fff5c4, #f2ca79);
+  border: calc(1px * var(--poster-scale)) solid #d59f35;
+  border-radius: calc(18px * var(--poster-scale)) calc(4px * var(--poster-scale)) calc(18px * var(--poster-scale)) calc(4px * var(--poster-scale));
+  font-weight: 700;
+  font-size: calc(19px * var(--poster-scale));
+  color: #173255;
+  line-height: 1.5;
+  box-shadow: inset 0 0 0 calc(2px * var(--poster-scale)) #fff0ba;
+}
+body.touch-layout .role-section ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: calc(16.5px * var(--poster-scale));
+  line-height: 1.52;
+  font-weight: 500;
+}
+body.touch-layout .role-section li {
+  display: grid;
+  grid-template-columns: calc(25px * var(--poster-scale)) minmax(0, 1fr);
+  column-gap: calc(5px * var(--poster-scale));
+  break-inside: avoid;
+  padding: calc(1px * var(--poster-scale)) 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+body.touch-layout .entry-number {
+  text-align: right;
+}
+body.touch-layout .role-section.green {
+  background: linear-gradient(125deg, #fbfff8, #f2f7ec);
+  border-color: #92b57a;
+}
+body.touch-layout .role-section.green h4 {
+  background: linear-gradient(#e6f5ce, #b9d795);
+  border-color: #7ba656;
+  box-shadow: inset 0 0 0 calc(2px * var(--poster-scale)) #e7f6d2;
+}
+body.touch-layout .role-section.blue {
+  border-color: #8ac2d9;
+  background: linear-gradient(125deg, #fffcf5, #f1f6fa);
+}
+body.touch-layout .role-section.blue h4 {
+  background: linear-gradient(#e3f6ff, #a3d4ec);
+  border-color: #76b3ce;
+  box-shadow: inset 0 0 0 calc(2px * var(--poster-scale)) #e0f2fd;
+}
+body.touch-layout .stretch {
+  flex: 1;
+}
+body.touch-layout .bottom-groups {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: calc(15px * var(--poster-scale));
+  margin-top: calc(16px * var(--poster-scale));
+}
+body.touch-layout .bottom-groups .group-title {
+  font-size: calc(23px * var(--poster-scale));
+  min-height: calc(78px * var(--poster-scale));
+  display: flex;
+  align-items: center;
+}
+body.touch-layout .bottom-groups .group-frame:nth-child(1) .group-title {
+  background: linear-gradient(110deg, #03508a, #0983b8 70%, #69b6d0);
+  border-bottom-color: #116695;
+}
+body.touch-layout .bottom-groups .group-frame:nth-child(2) .group-title {
+  background: linear-gradient(110deg, #a30d65, #c8418d 65%, #edacd0);
+  border-bottom-color: #a83b77;
+  min-height: 0;
+}
+body.touch-layout .bottom-groups .sections {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10px * var(--poster-scale));
+}
+body.touch-layout .bottom-groups .role-section ol {
+  font-size: calc(16.5px * var(--poster-scale));
+  line-height: 1.5;
+}
+body.touch-layout .split-entries {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(18px * var(--poster-scale));
+}
+body.touch-layout .poster-footer {
+  position: relative;
+  height: calc(290px * var(--poster-scale));
+  background-image: none;
+  background-size: calc(1200px * var(--poster-scale)) auto;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: calc(8px * var(--poster-scale));
+}
+body.touch-layout .poster-footer p {
+  position: relative;
+  margin: 0;
+  padding: calc(5px * var(--poster-scale)) calc(12px * var(--poster-scale));
+  text-align: center;
+  line-height: 1.5;
+  font-size: calc(21px * var(--poster-scale));
+  font-weight: 500;
+  background: radial-gradient(ellipse, #fff9df 70%, transparent 73%);
+  color: #253768;
+}
+body.touch-layout .poster-footer span {
+  font-size: calc(19px * var(--poster-scale));
+}
+body.touch-layout .temple-location {
+  display: block;
+  width: calc(640px * var(--poster-scale));
+  height: calc(43px * var(--poster-scale));
+  margin: calc(13px * var(--poster-scale)) auto 0;
+  border-radius: calc(8px * var(--poster-scale));
+  background: #fffbea;
+}
+body.touch-layout .poster-footer:before {
+  content: none;
+}
+body.touch-layout .poster-footer p {
+  width: calc(760px * var(--poster-scale));
+  height: auto;
+  margin-top: calc(60px * var(--poster-scale));
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  z-index: 1;
+}
+
+body.touch-layout .stage { perspective:none; }
+body.touch-layout .poster-sizer { transform:none!important; transform-style:flat; transition:none; }
+body.touch-layout .poster { transform:none!important; transform-origin:initial; isolation:auto; overflow:visible; }
+body.touch-layout .poster-header { overflow:visible; }
+body.touch-layout .lotus-3d, body.touch-layout .frame-glint { display:none; }
+body.touch-layout .floating-petals { perspective:none; }
+
 </style>
 </head>
 <body>
@@ -2491,11 +2798,20 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   $("groups").append(main, bottom);
 
   function fitPoster() {
+    const nativeMobile = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0 || innerWidth <= 700;
+    document.body.classList.toggle('touch-layout', nativeMobile);
     const available =
       stage.clientWidth -
       parseFloat(getComputedStyle(stage).paddingLeft) -
       parseFloat(getComputedStyle(stage).paddingRight);
     const scale = Math.min(1, available / 1200);
+    if (nativeMobile) {
+      document.body.style.setProperty('--poster-scale',String(scale));
+      poster.style.transform = 'none';
+      sizer.style.width = `${1200 * scale}px`;
+      sizer.style.height = 'auto';
+      return;
+    }
     poster.style.transform = `scale(${scale})`;
     sizer.style.width = `${1200 * scale}px`;
     sizer.style.height = `${poster.offsetHeight * scale}px`;
@@ -2665,6 +2981,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           const clone = doc.getElementById("poster");
           clone.classList.add("a4-export");
           doc.body.classList.add("still");
+          doc.body.classList.remove('touch-layout');
           doc.body.append(clone);
           for (const child of doc.body.children)
             if (child !== clone) child.style.display = "none";

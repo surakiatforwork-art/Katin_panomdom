@@ -58,5 +58,15 @@ test("touch creates upward sparkles without blocking mobile scrolling", async ({
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
     390,
   );
+  const mobileLayout = await page.evaluate(() => ({
+    poster: getComputedStyle(document.querySelector('#poster')).transform,
+    wrapper: getComputedStyle(document.querySelector('.poster-sizer')).transform,
+    perspective: getComputedStyle(document.querySelector('.stage')).perspective,
+    width: document.querySelector('#poster').getBoundingClientRect().width,
+  }));
+  expect(mobileLayout.poster).toBe('none');
+  expect(mobileLayout.wrapper).toBe('none');
+  expect(mobileLayout.perspective).toBe('none');
+  expect(mobileLayout.width).toBeCloseTo(366, 0);
   await context.close();
 });

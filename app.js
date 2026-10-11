@@ -101,11 +101,20 @@
   $("groups").append(main, bottom);
 
   function fitPoster() {
+    const nativeMobile = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0 || innerWidth <= 700;
+    document.body.classList.toggle('touch-layout', nativeMobile);
     const available =
       stage.clientWidth -
       parseFloat(getComputedStyle(stage).paddingLeft) -
       parseFloat(getComputedStyle(stage).paddingRight);
     const scale = Math.min(1, available / 1200);
+    if (nativeMobile) {
+      document.body.style.setProperty('--poster-scale',String(scale));
+      poster.style.transform = 'none';
+      sizer.style.width = `${1200 * scale}px`;
+      sizer.style.height = 'auto';
+      return;
+    }
     poster.style.transform = `scale(${scale})`;
     sizer.style.width = `${1200 * scale}px`;
     sizer.style.height = `${poster.offsetHeight * scale}px`;
@@ -275,6 +284,7 @@
           const clone = doc.getElementById("poster");
           clone.classList.add("a4-export");
           doc.body.classList.add("still");
+          doc.body.classList.remove('touch-layout');
           doc.body.append(clone);
           for (const child of doc.body.children)
             if (child !== clone) child.style.display = "none";
