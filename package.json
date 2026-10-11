@@ -6,7 +6,7 @@
   "scripts": {
     "test": "playwright test",
     "start": "python -m http.server 8765",
-    "build": "python scripts/bundle_art.py && python scripts/build_standalone.py"
+    "build": "python scripts/extract_names.py && python scripts/bundle_art.py && python scripts/build_standalone.py"
   },
   "repository": {
     "type": "git",

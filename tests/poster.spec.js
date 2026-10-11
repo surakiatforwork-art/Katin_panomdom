@@ -15,6 +15,7 @@ const paragraphs = JSON.parse(
     { encoding: "utf8" },
   ),
 );
+const expectedNames = paragraphs.filter(p => /^\d+\./.test(p)).map(p => p.replace(/^(\d+\.)\s*/, '$1'));
 
 test("source names, full poster JPG/PNG/PDF downloads and visual layout", async ({
   page,
@@ -24,7 +25,7 @@ test("source names, full poster JPG/PNG/PDF downloads and visual layout", async 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.locator("#poster li")).toHaveCount(126);
+  await expect(page.locator("#poster li")).toHaveCount(expectedNames.length);
   const rendered = await page.locator("#poster li").evaluateAll((nodes) =>
     nodes.map((n) => ({
       text: n.textContent,
@@ -34,6 +35,7 @@ test("source names, full poster JPG/PNG/PDF downloads and visual layout", async 
   for (const entry of rendered) {
     expect(entry.text).toBe(paragraphs[entry.index].replace(/^(\d+\.)\s*/, '$1'));
   }
+  expect(rendered.map(e => e.text)).toEqual(expectedNames);
   await expect(page.locator('.group-frame').first().locator('li').last()).toHaveText('20.สท.รุ่งอรุณ หายโศก และครอบครัว');
   expect(await page.locator(".group-title").allTextContents()).toEqual(paragraphs.filter(p => p.startsWith('สาย')));
   const jsonData = JSON.parse(fs.readFileSync('name.json', 'utf8'));
@@ -137,7 +139,8 @@ for (const entry of ["index.html", "dist/kathin-poster.html"]) {
     await page.route("http://**/*", (route) => route.abort());
     await page.goto(pathToFileURL(path.resolve(entry)).href);
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator("#poster li")).toHaveCount(126);
+    await expect(page.locator("#poster li")).toHaveCount(expectedNames.length);
+    expect(await page.locator('#poster li').allTextContents()).toEqual(expectedNames);
     await page.locator("#open-export").click();
     await page.locator("#export-quality").selectOption("1");
     const pending = page.waitForEvent("download");

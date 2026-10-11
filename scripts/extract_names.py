@@ -19,9 +19,22 @@ for index, paragraph in enumerate(xml.findall('.//w:body//w:p', ns)):
     elif re.match(r'^\d+\.', text):
         text = re.sub(r'^(\d+\.)\s*', r'\1', text)
         groups[-1]['sections'][-1]['entries'].append({'text': text, 'sourceParagraph': index})
-assert [[len(s['entries']) for s in g['sections']] for g in groups] == [[1,25,34,20],[2,2,5],[4,3,30]]
+    elif groups:
+        raise ValueError(f'Unrecognized list paragraph {index}: {text}. Add a numeric prefix or check the role heading.')
+expected_roles = [['ประธานอุปถัมภ์','ประธาน','รองประธาน','กรรมการ'],
+                  ['ประธาน','รองประธาน','กรรมการ'],
+                  ['ประธาน','รองประธาน','กรรมการ']]
+if [[s['title'] for s in g['sections']] for g in groups] != expected_roles:
+    raise ValueError('Word group/role headings are incomplete or changed; inspect the document before publishing.')
+for group in groups:
+    for section in group['sections']:
+        entries = section['entries']
+        numbers = [int(e['text'].split('.',1)[0]) for e in entries]
+        if not entries or numbers != list(range(1,len(entries)+1)):
+            raise ValueError(f"Missing, duplicate or out-of-order numbering: {group['title']} / {section['title']}")
 data = {'title': 'รายชื่อผู้ร่วมทำบุญกฐินสามัคคี ณ วัดเขาพนมโดมวนาราม', 'source': source.relative_to(ROOT).as_posix(), 'groups': groups}
 payload = json.dumps(data, ensure_ascii=False, indent=2)
 (ROOT / 'name.json').write_text(payload + '\n', encoding='utf-8')
 (ROOT / 'names.js').write_text('/* Generated from organized Word and name.json. */\nwindow.KATHIN_DATA = ' + payload + ';\n', encoding='utf-8')
-print('Generated name.json and names.js with 126 entries from organized Word.')
+count = sum(len(s['entries']) for g in groups for s in g['sections'])
+print(f'Generated name.json and names.js with {count} entries from organized Word.')
