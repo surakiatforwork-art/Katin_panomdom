@@ -125,6 +125,7 @@
     $("sparkles").append(spark);
   }
   function setMotion() {
+    window.KathinEffects?.setEnabled(motion);
     document.body.classList.toggle("still", !motion);
     $("motion-toggle").setAttribute("aria-pressed", String(motion));
     $("motion-label").textContent = motion ? "เอฟเฟกต์เปิด" : "เอฟเฟกต์ปิด";
@@ -232,6 +233,7 @@
     const format = document.querySelector('input[name="format"]:checked').value;
     const scale = Number($("export-quality").value);
     busy = true;
+    window.KathinEffects?.pause(true);
     const controls = [
       ...dialog.querySelectorAll("button,input,select"),
       $("open-export"),
@@ -365,6 +367,7 @@
       status.textContent = `ดาวน์โหลดไม่สำเร็จ: ${error.message} ลองเลือกความละเอียดมาตรฐานแล้วดาวน์โหลดอีกครั้ง`;
     } finally {
       busy = false;
+      window.KathinEffects?.pause(false);
       controls.forEach((control) => {
         control.disabled = false;
       });
