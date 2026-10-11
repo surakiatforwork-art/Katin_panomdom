@@ -3,16 +3,7 @@
   "use strict";
   let enabled = !matchMedia("(prefers-reduced-motion: reduce)").matches;
   let paused = false;
-  let sceneVisible = true;
-  const host = document.getElementById("ceremony-scene");
-  let renderer,
-    scene,
-    camera,
-    offering,
-    sceneFrame = 0,
-    lastRender = 0;
-  let targetX = 0,
-    targetY = 0;
+  let targetX = 0;
   const active = () => enabled && !paused && !document.hidden;
   const layer = document.createElement("div");
   layer.className = "floating-petals live-decoration";
@@ -29,171 +20,6 @@
     layer.append(petal);
   }
 
-  // A real lit 3D model: lathed gold pedestal, scalloped tray and folded cloth.
-  try {
-    const T = window.THREE;
-    renderer = new T.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference: "low-power",
-    });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
-    renderer.setSize(360, 230);
-    renderer.outputColorSpace = T.SRGBColorSpace;
-    renderer.toneMapping = T.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
-    renderer.domElement.className = "offering-canvas";
-    host.append(renderer.domElement);
-    host.classList.add("webgl-ready");
-    scene = new T.Scene();
-    camera = new T.PerspectiveCamera(34, 360 / 230, 0.1, 50);
-    camera.position.set(4, 3.3, 6.8);
-    camera.lookAt(0, 0.85, 0);
-    scene.add(new T.HemisphereLight(0xffefc9, 0x805020, 2.4));
-    const key = new T.DirectionalLight(0xffe4ac, 4.5);
-    key.position.set(-3, 5, 4);
-    scene.add(key);
-    const rim = new T.DirectionalLight(0xffffff, 3.2);
-    rim.position.set(4, 2, -3);
-    scene.add(rim);
-    const gold = new T.MeshStandardMaterial({
-      color: 0xeeb337,
-      metalness: 0.72,
-      roughness: 0.24,
-    });
-    const accent = new T.MeshStandardMaterial({
-      color: 0xffd967,
-      metalness: 0.65,
-      roughness: 0.22,
-    });
-    offering = new T.Group();
-    scene.add(offering);
-    const profile = [
-      [0, 0],
-      [0.72, 0],
-      [0.82, 0.08],
-      [0.73, 0.18],
-      [0.48, 0.24],
-      [0.28, 0.38],
-      [0.2, 0.64],
-      [0.24, 0.82],
-      [0.48, 0.92],
-      [0.82, 1.02],
-      [1.26, 1.2],
-      [1.52, 1.42],
-      [1.55, 1.5],
-      [1.46, 1.52],
-      [1.3, 1.35],
-      [0.9, 1.25],
-      [0, 1.24],
-    ];
-    offering.add(
-      new T.Mesh(
-        new T.LatheGeometry(
-          profile.map(([x, y]) => new T.Vector2(x, y)),
-          64,
-        ),
-        gold,
-      ),
-    );
-    for (const [radius, y, tube] of [
-      [0.76, 0.1, 0.04],
-      [0.44, 0.29, 0.035],
-      [0.27, 0.79, 0.035],
-      [1.52, 1.48, 0.055],
-    ]) {
-      const ring = new T.Mesh(
-        new T.TorusGeometry(radius, tube, 10, 64),
-        accent,
-      );
-      ring.rotation.x = Math.PI / 2;
-      ring.position.y = y;
-      offering.add(ring);
-    }
-    for (let i = 0; i < 32; i++) {
-      const bead = new T.Mesh(new T.SphereGeometry(0.075, 8, 6), accent);
-      const angle = (i * Math.PI) / 16;
-      bead.position.set(Math.cos(angle) * 1.5, 1.46, Math.sin(angle) * 1.5);
-      bead.scale.set(1, 1.6, 1);
-      offering.add(bead);
-    }
-    const clothTexture = document.createElement("canvas");
-    clothTexture.width = 256;
-    clothTexture.height = 128;
-    const paint = clothTexture.getContext("2d");
-    paint.fillStyle = "#f5a723";
-    paint.fillRect(0, 0, 256, 128);
-    for (let i = 0; i < 128; i++) {
-      paint.fillStyle = `rgba(110,44,0,${0.04 + 0.06 * Math.sin(i * 0.18)})`;
-      paint.fillRect(0, i, 256, 1);
-    }
-    const texture = new T.CanvasTexture(clothTexture);
-    texture.colorSpace = T.SRGBColorSpace;
-    const cloth = new T.MeshStandardMaterial({
-      map: texture,
-      color: 0xffbd3c,
-      roughness: 0.92,
-      metalness: 0,
-    });
-    for (let i = 0; i < 4; i++) {
-      const fold = new T.Mesh(
-        new T.BoxGeometry(2.22 - i * 0.06, 0.19, 1.28, 12, 2, 8),
-        cloth,
-      );
-      const positions = fold.geometry.attributes.position;
-      for (let j = 0; j < positions.count; j++)
-        positions.setY(
-          j,
-          positions.getY(j) + Math.sin(positions.getX(j) * 5 + i) * 0.025,
-        );
-      fold.geometry.computeVertexNormals();
-      fold.position.set((i % 2) * 0.035, 1.57 + i * 0.185, 0);
-      fold.rotation.y = 0.08;
-      offering.add(fold);
-      const hem = new T.Mesh(
-        new T.CylinderGeometry(0.09, 0.09, 2.2 - i * 0.06, 16),
-        cloth,
-      );
-      hem.rotation.z = Math.PI / 2;
-      hem.position.set(0, 1.57 + i * 0.185, 0.64);
-      offering.add(hem);
-    }
-    const band = new T.Mesh(
-      new T.BoxGeometry(0.22, 0.04, 1.35),
-      new T.MeshStandardMaterial({ color: 0xffd165, roughness: 0.8 }),
-    );
-    band.position.set(0.45, 2.24, 0);
-    offering.add(band);
-    renderer.render(scene, camera);
-    new IntersectionObserver(([entry]) => {
-      sceneVisible = entry.isIntersecting;
-      sync();
-    }).observe(host);
-    renderer.domElement.addEventListener("webglcontextlost", (event) => {
-      event.preventDefault();
-      cancelAnimationFrame(sceneFrame);
-      sceneFrame = 0;
-      host.classList.remove("webgl-ready");
-      renderer = null;
-    });
-  } catch (_) {
-    host.classList.remove("webgl-ready");
-    if (renderer) renderer.dispose();
-    renderer = null;
-  }
-  function renderScene(time) {
-    sceneFrame = 0;
-    if (!renderer || !active() || !sceneVisible) return;
-    if (time - lastRender > 32) {
-      lastRender = time;
-      offering.rotation.y = Math.sin(time * 0.00038) * 0.48 + targetX * 0.35;
-      offering.rotation.x = targetY * 0.09;
-      offering.position.y = Math.sin(time * 0.0012) * 0.055;
-      renderer.render(scene, camera);
-    }
-    sceneFrame = requestAnimationFrame(renderScene);
-  }
-
   // Upward pointer fountains are drawn on a click-through screen overlay.
   const canvas = document.createElement("canvas");
   canvas.id = "pointer-sparkles";
@@ -207,7 +33,7 @@
     lastTime = 0,
     lastEmit = 0;
   function resize() {
-    const dpr = Math.min(devicePixelRatio, 2);
+    const dpr = Math.min(devicePixelRatio, 1.25);
     canvas.width = Math.round(innerWidth * dpr);
     canvas.height = Math.round(innerHeight * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -227,7 +53,7 @@
         size: 1 + Math.random() * 2.7,
         phase: Math.random() * 6.28,
       });
-    if (particles.length > 220) particles.splice(0, particles.length - 220);
+    if (particles.length > 128) particles.splice(0, particles.length - 128);
     if (!particleFrame) {
       lastTime = performance.now();
       particleFrame = requestAnimationFrame(drawParticles);
@@ -235,6 +61,10 @@
   }
   function drawParticles(time) {
     particleFrame = 0;
+    if (active() && time - lastTime < 32) {
+      particleFrame = requestAnimationFrame(drawParticles);
+      return;
+    }
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     if (!active()) {
       particles = [];
@@ -276,7 +106,6 @@
     "pointermove",
     (event) => {
       targetX = (event.clientX / innerWidth - 0.5) * 2;
-      targetY = (event.clientY / innerHeight - 0.5) * 2;
       if (performance.now() - lastEmit < 24) return;
       lastEmit = performance.now();
       emit(event.clientX, event.clientY, event.pointerType === "touch" ? 9 : 5);
@@ -298,14 +127,11 @@
     canvas.style.display = enabled ? "" : "none";
     document.body.classList.toggle("effects-paused", paused || document.hidden);
     if (!active()) {
-      cancelAnimationFrame(sceneFrame);
-      sceneFrame = 0;
       cancelAnimationFrame(particleFrame);
       particleFrame = 0;
       particles = [];
       ctx.clearRect(0, 0, innerWidth, innerHeight);
-    } else if (renderer && sceneVisible && !sceneFrame)
-      sceneFrame = requestAnimationFrame(renderScene);
+    }
   }
   window.KathinEffects = {
     setEnabled(value) {
