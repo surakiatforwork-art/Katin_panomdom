@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#482815">
+  <meta name="description" content="รายชื่อผู้ร่วมทำบุญกฐินสามัคคี ณ วัดเขาพนมโดมวนาราม พร้อมดาวน์โหลดโปสเตอร์ JPG PNG และ PDF">
+  <title>กฐินสามัคคี · วัดเขาพนมโดมวนาราม</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="names.js"></script>
+  <script defer src="assets/poster-art.js"></script>
+  <script defer src="vendor/html2canvas.min.js"></script>
+  <script defer src="vendor/jspdf.umd.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <header class="toolbar">
+    <a class="brand" href="#poster" aria-label="ไปยังโปสเตอร์"><span class="brand-mark">❖</span><span>กฐินสามัคคี<small>วัดเขาพนมโดมวนาราม</small></span></a>
+    <div class="toolbar-actions">
+      <button id="motion-toggle" class="quiet-button" type="button" aria-pressed="true"><span aria-hidden="true">✦</span> <span id="motion-label">เอฟเฟกต์เปิด</span></button>
+      <button id="open-export" class="gold-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 15v5h16v-5"/></svg> ดาวน์โหลดโปสเตอร์</button>
+    </div>
+  </header>
+  <main>
+    <div class="intro"><span class="eyebrow">ร่วมสืบสานประเพณี · ร่วมอนุโมทนาบุญ</span><h1>กฐินสามัคคี</h1><p>รายนามผู้ร่วมทำบุญ ณ วัดเขาพนมโดมวนาราม</p><div class="intro-rule" aria-hidden="true"><span>✧</span></div></div>
+    <div class="stage" id="stage">
+      <div class="poster-sizer" id="poster-sizer">
+        <article id="poster" class="poster" aria-label="โปสเตอร์รายชื่อผู้ร่วมทำบุญกฐินสามัคคี">
+          <header class="poster-header">
+            <div class="title-plaque"><span class="plaque-ornament" aria-hidden="true">❖</span><h2>รายชื่อผู้ร่วมทำบุญกฐินสามัคคี</h2><span class="plaque-ornament" aria-hidden="true">❖</span></div>
+            <div class="temple-plaque">ณ วัดเขาพนมโดมวนาราม</div>
+            <p class="temple-location">ต.วัดตะแบก อ.เทพสถิต จ. ชัยภูมิ</p>
+            <div class="header-ornament" aria-hidden="true">─── ✧ ❖ ✧ ───</div>
+          </header>
+          <div class="poster-content" id="groups"></div>
+          <footer class="poster-footer"><p>ขออนุโมทนาบุญ แด่ทุกท่านที่ร่วมทำบุญกฐินสามัคคี<br><span>ขอให้ทุกท่านประสบแต่ความสุข ความเจริญ ด้วยเทอญ</span></p></footer>
+        </article>
+      </div>
+      <div id="sparkles" class="sparkles" aria-hidden="true"></div>
+    </div>
+    <div class="page-note"><span aria-hidden="true">❖</span><p>ร่วมบุญ ร่วมใจ สืบสานพระพุทธศาสนา<small>ดาวน์โหลดโปสเตอร์เต็มหน้าได้ในรูปแบบ JPG · PNG · PDF</small></p></div>
+  </main>
+  <dialog id="export-dialog" aria-labelledby="export-title">
+    <form method="dialog"><button class="close-button" aria-label="ปิดหน้าต่าง" value="cancel">×</button></form>
+    <div class="dialog-symbol" aria-hidden="true">❖</div>
+    <h2 id="export-title">ดาวน์โหลดโปสเตอร์</h2><p class="dialog-description">บันทึกโปสเตอร์เต็มหน้า พร้อมรายชื่อครบทุกสาย</p>
+    <fieldset class="format-options"><legend>เลือกรูปแบบไฟล์</legend>
+      <label><input type="radio" name="format" value="jpg" checked><span><strong>JPG</strong><small>แชร์ง่าย · ไฟล์ขนาดเล็ก</small></span></label>
+      <label><input type="radio" name="format" value="png"><span><strong>PNG</strong><small>ภาพคมชัด · เก็บรายละเอียด</small></span></label>
+      <label><input type="radio" name="format" value="pdf"><span><strong>PDF</strong><small>โปสเตอร์หน้าเดียว · พร้อมพิมพ์</small></span></label>
+    </fieldset>
+    <label class="quality-label" for="export-quality">ความละเอียด</label>
+    <select id="export-quality"><option value="2">สูง — กว้าง 2,400 พิกเซล</option><option value="3">สูงพิเศษ — กว้าง 3,600 พิกเซล</option><option value="1">มาตรฐาน — กว้าง 1,200 พิกเซล</option></select>
+    <p class="export-note">ไฟล์ที่ได้จะเป็นภาพนิ่งเต็มโปสเตอร์ ไม่มีปุ่มควบคุม</p>
+    <button id="save-export" class="gold-button save-button" type="button">ดาวน์โหลด JPG</button>
+    <p id="export-status" class="export-status" role="status" aria-live="polite"></p>
+  </dialog>
+  <noscript><p class="noscript">กรุณาเปิด JavaScript เพื่อแสดงรายชื่อและดาวน์โหลดโปสเตอร์</p></noscript>
+</body>
+</html>

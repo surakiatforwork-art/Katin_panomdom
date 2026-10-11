@@ -1,0 +1,26 @@
+{
+  "name": "kathin-phanom-dom",
+  "version": "1.0.0",
+  "description": "Thai Kathin donation poster with full-page JPG PNG PDF export",
+  "main": "app.js",
+  "scripts": {
+    "test": "playwright test",
+    "start": "python -m http.server 8765",
+    "build": "python scripts/bundle_art.py && python scripts/build_standalone.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/surakiatforwork-art/Kratin_panomdom.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/surakiatforwork-art/Kratin_panomdom/issues"
+  },
+  "homepage": "https://github.com/surakiatforwork-art/Kratin_panomdom#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.64.0"
+  }
+}

@@ -1,0 +1,6 @@
+node_modules/
+test-results/
+source-paragraphs.json
+assets/font-source.css
+*.log
+__pycache__/
