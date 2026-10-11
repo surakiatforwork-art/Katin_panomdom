@@ -277,7 +277,7 @@ window.KATHIN_DATA = {
               "sourceParagraph": 236
             },
             {
-              "text": "4.คุณอารียื พึ่งแสง และครอบครัว",
+              "text": "4.คุณอารีย์ พึ่งแสง และครอบครัว",
               "sourceParagraph": 237
             },
             {
@@ -469,7 +469,7 @@ window.KATHIN_DATA = {
               "sourceParagraph": 282
             },
             {
-              "text": "7. คุณหมุยยง แช่ภู่ และครอบครัว",
+              "text": "7. คุณหมุยยง แซ่ภู่ และครอบครัว",
               "sourceParagraph": 283
             },
             {
@@ -497,7 +497,7 @@ window.KATHIN_DATA = {
               "sourceParagraph": 289
             },
             {
-              "text": "14.คุณาญจนา รอดผล และครอบครัว",
+              "text": "14.คุณกาญจนา รอดผล และครอบครัว",
               "sourceParagraph": 290
             },
             {
