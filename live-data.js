@@ -5,7 +5,7 @@
   const config = window.KATHIN_CONFIG;
   const reference = window.KATHIN_DATA.groups;
   let loading = false;
-  let live = false;
+  const nameCount = () => window.KATHIN_DATA.groups.reduce((total,g) => total + g.sections.reduce((sum,s) => sum + s.entries.length,0),0);
   function validate(payload) {
     if (!payload?.ok) throw new Error(payload?.error || "API ไม่พร้อมใช้งาน");
     const data = payload.data;
@@ -47,30 +47,29 @@
   async function refresh() {
     if (loading) return;
     if (document.querySelector("#export-dialog")?.open) {
-      status.textContent = "ปิดหน้าดาวน์โหลดก่อนรีเฟรชรายชื่อ";
+      status.textContent = "กรุณาปิดหน้าดาวน์โหลดก่อนอัปเดตรายชื่อ";
       return;
     }
     if (!config?.apiUrl) {
-      status.textContent = "รายชื่อสำรอง · ยังไม่ได้ตั้งค่า API";
+      status.textContent = "รายชื่อผู้ร่วมทำบุญ · " + nameCount() + " รายการ";
       return;
     }
     loading = true;
     button.disabled = true;
-    status.textContent = "กำลังอ่านรายชื่อจากชีท…";
+    status.textContent = "กำลังอัปเดตรายชื่อ…";
     try {
       const url = new URL(config.apiUrl);
       if (url.origin !== "https://script.google.com" || !/^\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url.pathname)) throw new Error("URL API ไม่ถูกต้อง");
       const result = validate(await request(url));
       // Keep an open export dialog consistent with its preview.
       if (document.querySelector("#export-dialog")?.open) {
-        status.textContent = "ปิดหน้าดาวน์โหลดแล้วกดรีเฟรชรายชื่ออีกครั้ง";
+        status.textContent = "กรุณาปิดหน้าดาวน์โหลด แล้วกดอัปเดตรายชื่ออีกครั้ง";
         return;
       }
       window.dispatchEvent(new CustomEvent("kathin-data",{detail:result.data}));
-      live = true;
-      status.textContent = "รายชื่อจากชีท · " + result.count + " รายการ";
+      status.textContent = "รายชื่อผู้ร่วมทำบุญ · " + result.count + " รายการ";
     } catch (error) {
-      status.textContent = (live ? "คงรายชื่อที่โหลดล่าสุด" : "ใช้รายชื่อสำรอง") + " · " + error.message;
+      status.textContent = "อัปเดตไม่สำเร็จ ขณะนี้ยังแสดงรายชื่อชุดเดิม";
     } finally {
       loading = false;
       button.disabled = false;

@@ -32,15 +32,15 @@ test('web refresh replaces names and retains latest data if API fails', async ({
   data.groups[0].sections[3].entries.push({text:'21.ชื่อเพิ่มจากชีท'});
   payload = {ok:true,data};
   await page.goto('/');
-  await expect(page.locator('#data-status')).toContainText('รายชื่อจากชีท');
+  await expect(page.locator('#data-status')).toContainText('รายชื่อผู้ร่วมทำบุญ');
   await expect(page.getByText('ชื่อเพิ่มจากชีท',{exact:true})).toBeVisible();
   data.groups[0].sections[3].entries.pop();
   data.groups[0].sections[1].entries[0].text='1.ชื่อแก้จากชีท';
   await page.locator('#refresh-names').click();
   await expect(page.getByText('ชื่อเพิ่มจากชีท',{exact:true})).toHaveCount(0);
   await expect(page.getByText('ชื่อแก้จากชีท',{exact:true})).toBeVisible();
-  payload={ok:false,error:'แถว 2: ลำดับไม่ถูกต้อง'};
+  payload={ok:false,error:'หัวคอลัมน์ชีทไม่ตรงกับฐานรายชื่อ'};
   await page.locator('#refresh-names').click();
-  await expect(page.locator('#data-status')).toContainText('คงรายชื่อที่โหลดล่าสุด');
+  await expect(page.locator('#data-status')).toHaveText('อัปเดตไม่สำเร็จ ขณะนี้ยังแสดงรายชื่อชุดเดิม');
   await expect(page.getByText('ชื่อแก้จากชีท',{exact:true})).toBeVisible();
 });

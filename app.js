@@ -106,7 +106,7 @@
   renderNames(window.KATHIN_DATA);
   window.addEventListener('kathin-data', (event) => {
     if (busy) {
-      status.textContent = 'รายชื่อมีการเปลี่ยนแปลง กรุณาปิดหน้าดาวน์โหลดและรีเฟรชรายชื่ออีกครั้ง';
+      status.textContent = 'รายชื่อมีการเปลี่ยนแปลง กรุณาปิดหน้าดาวน์โหลด แล้วกดอัปเดตรายชื่ออีกครั้ง';
       return;
     }
     renderNames(event.detail);
